@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>小游戏</title>
+    <script src="./vue.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      ul {
+        display: flex;
+      }
+      li {
+        width: 50px;
+        height: 50px;
+        background-color: bisque;
+        color: #000;
+        text-align: center;
+        line-height: 50px;
+        border: solid 1px;
+        margin: 10px;
+        list-style: none;
+      }
+      .ul1 {
+        position: fixed;
+        top: 0;
+      }
+      .ul2 {
+        position: fixed;
+        top: 60px;
+      }
+      .ul3 {
+        position: fixed;
+        top: 120px;
+      }
+      #player {
+        position: fixed;
+        top: 250px;
+        left: 50px;
+      }
+      button {
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <ul class="ul1">
+        <li v-for="item in arr.firstLine">{{item}}</li>
+      </ul>
+      <ul class="ul2">
+        <li v-for="item in arr.TheSecondLine">{{item}}</li>
+      </ul>
+      <ul class="ul3">
+        <li v-for="item in arr.TheThirdLine">{{item}}</li>
+      </ul>
+      <div id="player">
+        <span>张三：</span>
+        <input type="text" v-model="XM_a" placeholder="请输入要取第几行" />
+        <input type="text" v-model="XM_b" placeholder="请输入要取出几个" />
+        <button @click="first" :disabled="state">取出</button>
+        <br /><br />
+        <span>李四：</span>
+        <input type="text" v-model="XW_a" placeholder="请输入要取第几行" />
+        <input type="text" v-model="XW_b" placeholder="请输入要取出几个" />
+        <button @click="second" :disabled="state">取出</button>
+      </div>
+    </div>
+  </body>
+  <script>
+    new Vue({
+      el: "#app",
+      data: {
+        XM_a: "",
+        XM_b: "",
+        XW_a: "",
+        XW_b: "",
+        state: false,
+        line: ["firstLine", "TheSecondLine", "TheThirdLine"],
+        arr: {
+          firstLine: [1, 1, 1],
+          TheSecondLine: [2, 2, 2, 2, 2],
+          TheThirdLine: [3, 3, 3, 3, 3, 3, 3],
+        },
+      },
+      methods: {
+        // 第一名玩家
+        first() {
+          if (this.XM_a == "" || this.XM_b == "") {
+            alert("请输入第几行 和 要取出的数量");
+            return;
+          }
+          var s1 = this.GetsTheNumberOfRows(this.XM_a);
+          this.arr[s1].splice(0, this.XM_b);
+          var shuliang = this.concat();
+          if (shuliang == 1) {
+            alert("李四输了");
+            this.state = true;
+          }
+          if (shuliang == 0) {
+            alert("张三输了");
+            this.state = true;
+          }
+        },
+        // 第二名玩家
+        second() {
+          if (this.XW_a == "" || this.XW_b == "") {
+            alert("请输入第几行 和 要取出的数量");
+            return;
+          }
+          var s2 = this.GetsTheNumberOfRows(this.XW_a);
+          this.arr[s2].splice(0, this.XW_b);
+          var shuliang = this.concat();
+          if (shuliang == 1) {
+            alert("张三输了");
+            this.state = true;
+          }
+          if (shuliang == 0) {
+            alert("李四输了");
+            this.state = true;
+          }
+        },
+        // 获取第几行
+        GetsTheNumberOfRows(num) {
+          if (this.arr.firstLine.length == 0) {
+            var hang = this.line.indexOf("firstLine");
+            if (hang != -1) {
+              this.line.splice(hang, 1);
+            }
+          }
+          if (this.arr.TheSecondLine.length == 0) {
+            var hang = this.line.indexOf("TheSecondLine");
+            if (hang != -1) {
+              this.line.splice(hang, 1);
+            }
+          }
+          if (this.arr.TheThirdLine.length == 0) {
+            var hang = this.line.indexOf("TheThirdLine");
+            if (hang != -1) {
+              this.line.splice(hang, 1);
+            }
+          }
+          if (num == 1) {
+            return "firstLine";
+          }
+          if (num == 2) {
+            return "TheSecondLine";
+          }
+          if (num == 3) {
+            return "TheThirdLine";
+          }
+        },
+        // 所有的火柴
+        concat() {
+          var con = [
+            ...this.arr.firstLine,
+            ...this.arr.TheSecondLine,
+            ...this.arr.TheThirdLine,
+          ];
+          return con.length;
+        },
+      },
+    });
+  </script>
+</html>
